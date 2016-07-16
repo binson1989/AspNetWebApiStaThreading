@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Schedulers;
 using System.Web.Http.Controllers;
+using Topshelf;
 
 namespace AspNetWebApiStaThreading
 {
@@ -15,14 +16,37 @@ namespace AspNetWebApiStaThreading
     {
         static void Main(string[] args)
         {
-            string baseAddress = "http://localhost:9000/";
-
-            // Start OWIN host 
-            using (WebApp.Start<Startup>(url: baseAddress))
+            HostFactory.Run(serviceConfig =>
             {
-                Console.WriteLine("Web server started !!!");
-                Console.ReadLine();
-            }
+                serviceConfig.Service<WebServer>(serviceInstance =>
+                {
+                    serviceInstance.ConstructUsing(() => new WebServer());
+                    serviceInstance.WhenStarted(server => server.Start());
+                    serviceInstance.WhenStopped(server => server.Stop());
+                });
+                serviceConfig.RunAsLocalService();
+                serviceConfig.SetDescription("Demo topshelf service hosting owin web api");
+                serviceConfig.SetDisplayName("OWIN Web Api");
+                serviceConfig.SetServiceName("OwinWebApi");
+            });
+        }
+    }
+
+    public class WebServer
+    {
+        private IDisposable _webApp;
+
+        public bool Start()
+        {
+            string baseAddress = "http://localhost:9000/";
+            _webApp = WebApp.Start<Startup>(url: baseAddress);
+            return true;
+        }
+
+        public bool Stop()
+        {
+            _webApp?.Dispose();
+            return true;
         }
     }
 
