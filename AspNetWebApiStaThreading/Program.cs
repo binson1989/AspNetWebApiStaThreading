@@ -24,7 +24,7 @@ namespace AspNetWebApiStaThreading
                     serviceInstance.WhenStarted(server => server.Start());
                     serviceInstance.WhenStopped(server => server.Stop());
                 });
-                serviceConfig.RunAsLocalService();
+                serviceConfig.RunAsLocalSystem();
                 serviceConfig.SetDescription("Demo topshelf service hosting owin web api");
                 serviceConfig.SetDisplayName("OWIN Web Api");
                 serviceConfig.SetServiceName("OwinWebApi");
