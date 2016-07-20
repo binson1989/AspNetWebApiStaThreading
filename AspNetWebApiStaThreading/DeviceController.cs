@@ -6,15 +6,23 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
+using NLog;
 
 namespace AspNetWebApiStaThreading
 {
     [RoutePrefix("api/devices")]
     public class DeviceController : ApiController
     {
+        private readonly Logger _logger;
         private DeviceInfo _deviceInfo = new DeviceInfo();
 
+        public DeviceController(Logger logger)
+        {
+            _logger = logger;
+        }
+
         [HttpGet, Route("")]
+        [UseStaThread]
         public IHttpActionResult Get()
         {
             try

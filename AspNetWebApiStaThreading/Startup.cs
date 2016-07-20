@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.ExceptionHandling;
+using NLog.Owin.Logging;
 
 namespace AspNetWebApiStaThreading
 {
@@ -23,6 +24,7 @@ namespace AspNetWebApiStaThreading
             config.Services.Replace(typeof(IExceptionHandler), new GlobalHandler());
 
             //appBuilder.Use
+            appBuilder.UseNLog();
             appBuilder.UseWebApi(config);
         }
     }
