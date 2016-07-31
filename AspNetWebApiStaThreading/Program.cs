@@ -45,7 +45,10 @@ namespace AspNetWebApiStaThreading
 
         public bool Stop()
         {
-            _webApp?.Dispose();
+            if (null != _webApp)
+            {
+                _webApp.Dispose();
+            }
             return true;
         }
     }

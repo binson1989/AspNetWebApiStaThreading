@@ -10,15 +10,15 @@ using NLog;
 
 namespace AspNetWebApiStaThreading
 {
-    [RoutePrefix("api/devices")]
+    [RoutePrefix("api")]
     public class DeviceController : ApiController
     {
-        private readonly Logger _logger;
+        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
         private DeviceInfo _deviceInfo = new DeviceInfo();
 
-        public DeviceController(Logger logger)
+        public DeviceController()
         {
-            _logger = logger;
+            //_logger = logger;
         }
 
         [HttpGet, Route("")]
@@ -35,15 +35,16 @@ namespace AspNetWebApiStaThreading
             }
         }
 
-        [HttpGet]
+        [HttpGet, Route("take1")]
         [UseStaThread]
         public string Take1()
         {
             int sessionId = _deviceInfo.Take1();
+            _logger.Info("Take 1 - Thread id: {0}, Session id: {1}", Thread.CurrentThread.ManagedThreadId, sessionId);
             return string.Format("Take 1 - Thread id: {0}, Session id: {1}", Thread.CurrentThread.ManagedThreadId, sessionId);
         }
 
-        [HttpGet]
+        [HttpGet, Route("take2")]
         [UseStaThread]
         public string Take2()
         {
@@ -51,13 +52,13 @@ namespace AspNetWebApiStaThreading
             return string.Format("Take 2 - Thread id: {0}, Session id: {1}", Thread.CurrentThread.ManagedThreadId, sessionId);
         }
 
-        [HttpGet]
+        [HttpGet, Route("mta")]
         public string Mta()
         {
             return "value";
         }
 
-        [HttpGet]
+        [HttpGet, Route("message")]
         public HttpResponseMessage Message()
         {
             return Request.CreateResponse(System.Net.HttpStatusCode.BadRequest);

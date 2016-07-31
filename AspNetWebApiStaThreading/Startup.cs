@@ -24,7 +24,7 @@ namespace AspNetWebApiStaThreading
             config.Services.Replace(typeof(IExceptionHandler), new GlobalHandler());
 
             //appBuilder.Use
-            appBuilder.UseNLog();
+            //appBuilder.UseNLog();
             appBuilder.UseWebApi(config);
         }
     }
