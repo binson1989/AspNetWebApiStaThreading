@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using NLog;
+using System.ComponentModel.DataAnnotations;
 
 namespace AspNetWebApiStaThreading
 {
@@ -76,11 +77,27 @@ namespace AspNetWebApiStaThreading
             return null;
             //return new Company { Name = "abc", Place = "def" };
         }
+
+        [HttpPost, Route("validate")]
+        public IHttpActionResult Validate([FromBody]Address company)
+        {
+            return Ok();
+        }
     }
 
     public class Company
     {
+        [Required]
         public string Name { get; set; }
-        public string Place { get; set; }
+        [Required]
+        public Address Address { get; set; }
+    }
+
+    public struct Address
+    {
+        [Required]
+        public string City { get; set; }
+        [Required]
+        public string State { get; set; }
     }
 }

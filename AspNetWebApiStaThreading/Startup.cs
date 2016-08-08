@@ -20,6 +20,7 @@ namespace AspNetWebApiStaThreading
             // Configure Web API for self-host. 
             HttpConfiguration config = new HttpConfiguration();
             config.MapHttpAttributeRoutes();
+            config.Filters.Add(new ValidateModelStateAttribute());
             config.Services.Replace(typeof(IHttpActionInvoker), new StaThreadEnabledHttpActionInvoker());
             config.Services.Replace(typeof(IExceptionHandler), new GlobalHandler());
 
