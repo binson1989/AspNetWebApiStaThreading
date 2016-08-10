@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using NLog;
 using System.ComponentModel.DataAnnotations;
+using FluentValidation.Attributes;
+using System.Diagnostics;
 
 namespace AspNetWebApiStaThreading
 {
@@ -15,11 +17,15 @@ namespace AspNetWebApiStaThreading
     public class DeviceController : ApiController
     {
         private readonly Logger _logger = LogManager.GetCurrentClassLogger();
+        private IGoodService _goodService;
         private DeviceInfo _deviceInfo = new DeviceInfo();
 
-        public DeviceController()
+        public DeviceController(IGoodService goodService)
         {
             //_logger = logger;
+            _goodService = goodService;
+            _goodService.DisplayName();
+            Debug.WriteLine("XXX: New controller created !!!");
         }
 
         [HttpGet, Route("")]
@@ -79,25 +85,22 @@ namespace AspNetWebApiStaThreading
         }
 
         [HttpPost, Route("validate")]
-        public IHttpActionResult Validate([FromBody]Address company)
+        public IHttpActionResult Validate([FromBody]IList<Company> companies)
         {
-            return Ok();
+            return Ok(companies);
         }
     }
 
+    //[Validator(typeof(CompanyValidator))]
     public class Company
     {
-        [Required]
         public string Name { get; set; }
-        [Required]
         public Address Address { get; set; }
     }
 
-    public struct Address
+    public class Address
     {
-        [Required]
         public string City { get; set; }
-        [Required]
         public string State { get; set; }
     }
 }

@@ -8,6 +8,11 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.ExceptionHandling;
 using NLog.Owin.Logging;
+using FluentValidation.WebApi;
+using FluentValidation;
+using System.Reflection;
+using Autofac;
+using Autofac.Integration.WebApi;
 
 namespace AspNetWebApiStaThreading
 {
@@ -19,14 +24,29 @@ namespace AspNetWebApiStaThreading
         {
             // Configure Web API for self-host. 
             HttpConfiguration config = new HttpConfiguration();
-            config.MapHttpAttributeRoutes();
             config.Filters.Add(new ValidateModelStateAttribute());
+            config.MapHttpAttributeRoutes();
+            
             config.Services.Replace(typeof(IHttpActionInvoker), new StaThreadEnabledHttpActionInvoker());
             config.Services.Replace(typeof(IExceptionHandler), new GlobalHandler());
 
+            var builder = new ContainerBuilder();
+            //builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
+            builder.Register<IGoodService>(x => new GoodService()).SingleInstance();
+
+            //AssemblyScanner.FindValidatorsInAssembly(Assembly.GetExecutingAssembly())
+            //    .ForEach(result =>);
+
+            var container = builder.Build();
+            config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
+
+            FluentValidationModelValidatorProvider.Configure(config);
+
             //appBuilder.Use
             //appBuilder.UseNLog();
-            appBuilder.UseWebApi(config);
+            appBuilder.UseAutofacMiddleware(container)
+                .UseAutofacWebApi(config)
+                .UseWebApi(config);
         }
     }
 }
