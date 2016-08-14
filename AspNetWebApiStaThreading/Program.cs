@@ -1,6 +1,7 @@
 ﻿using Microsoft.Owin.Hosting;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -68,6 +69,11 @@ namespace AspNetWebApiStaThreading
 
     public class StaThreadEnabledHttpActionInvoker : ApiControllerActionInvoker
     {
+        public StaThreadEnabledHttpActionInvoker()
+        {
+            Debug.WriteLine("XXX: HttpActionInvoker instance created!!!");
+        }
+
         public override Task<HttpResponseMessage> InvokeActionAsync(HttpActionContext context, CancellationToken cancellationToken)
         {
             // Determine whether action has attribute UseStaThread

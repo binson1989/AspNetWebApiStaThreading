@@ -119,6 +119,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutofacValidatorFactory.cs" />
     <Compile Include="DeviceController.cs" />
     <Compile Include="DeviceInfo.cs" />
     <Compile Include="GlobalHandler.cs" />

@@ -84,10 +84,16 @@ namespace AspNetWebApiStaThreading
             //return new Company { Name = "abc", Place = "def" };
         }
 
-        [HttpPost, Route("validate")]
-        public IHttpActionResult Validate([FromBody]IList<Company> companies)
+        [HttpPost, Route("validate"), UseStaThread]
+        public IHttpActionResult Validate([FromBody]Company companies)
         {
             return Ok(companies);
+        }
+
+        [HttpGet, Route("throw"), UseStaThread]
+        public IHttpActionResult Throw([FromBody]IList<Company> companies)
+        {
+            throw new NotSupportedException("XXX: This api is not supported!!!");
         }
     }
 
