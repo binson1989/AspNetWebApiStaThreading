@@ -1,22 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Autofac.Extras.NLog;
+using System;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AspNetWebApiStaThreading
 {
     public class GoodService : IGoodService
     {
-        public GoodService()
+        private readonly ILogger _logger;
+
+        public GoodService(ILogger logger)
         {
+            _logger = logger;
             Debug.WriteLine("XXX: Service Instance created!!!");
         }
 
         public void DisplayName()
         {
-            
+            _logger.Info("Display name called !!!");
         }
 
         #region IDisposable Support

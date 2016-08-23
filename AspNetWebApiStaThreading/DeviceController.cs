@@ -1,30 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Web.Http;
-using NLog;
-using System.ComponentModel.DataAnnotations;
-using FluentValidation.Attributes;
 using System.Diagnostics;
+using Autofac.Extras.NLog;
 
 namespace AspNetWebApiStaThreading
 {
     [RoutePrefix("api")]
     public class DeviceController : ApiController
     {
-        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
+        private readonly ILogger _logger;
         private IGoodService _goodService;
         private DeviceInfo _deviceInfo = new DeviceInfo();
 
-        public DeviceController(IGoodService goodService)
+        public DeviceController(IGoodService goodService, ILogger logger)
         {
-            //_logger = logger;
             _goodService = goodService;
             _goodService.DisplayName();
+            _logger = logger;
             Debug.WriteLine("XXX: New controller created !!!");
         }
 

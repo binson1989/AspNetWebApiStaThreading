@@ -1,18 +1,13 @@
 ﻿using Owin;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.ExceptionHandling;
-using NLog.Owin.Logging;
 using FluentValidation.WebApi;
 using FluentValidation;
 using System.Reflection;
 using Autofac;
 using Autofac.Integration.WebApi;
+using Autofac.Extras.NLog;
 
 namespace AspNetWebApiStaThreading
 {
@@ -35,6 +30,7 @@ namespace AspNetWebApiStaThreading
             builder.RegisterType(typeof(GoodService)).As<IGoodService>().SingleInstance();
             builder.RegisterType(typeof(StaThreadEnabledHttpActionInvoker)).As<IHttpActionInvoker>().SingleInstance();
             builder.RegisterType(typeof(GlobalHandler)).As<IExceptionHandler>().SingleInstance();
+            builder.RegisterModule<NLogModule>();
             //builder.RegisterInstance(new GoodService()).As<IGoodService>();
 
             var validators = AssemblyScanner.FindValidatorsInAssembly(Assembly.GetExecutingAssembly());
